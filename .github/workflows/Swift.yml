@@ -7,13 +7,17 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  Test:
+    name: Execute tests on MacOS
     runs-on: macos-latest
-
     steps:
     - uses: actions/checkout@v3
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+    - name: Swift Version
+      run: swift --version
+    - name: Build and run tests in debug mode with coverage
+      run: |
+        swift test \
+          -c debug \
+          -Xswiftc -warnings-as-errors \
+          --enable-code-coverage \
+          --build-path .build-test-debug

@@ -5,6 +5,10 @@ import PackageDescription
 
 let package = Package(
     name: "Figma",
+    platforms: [
+        .iOS(.v15),
+        .macOS(.v11)
+    ],
     products: [
         .library(
             name: "Figma",
