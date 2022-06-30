@@ -1,23 +1,21 @@
 name: Swift
 
-on:
-  push:
-    branches: [ "develop" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push]
 
 jobs:
-  Test:
-    name: Execute tests on MacOS
-    runs-on: macos-latest
+  build:
+    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        swift: ["5.6", "5.7"]
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
-    - name: Swift Version
-      run: swift --version
-    - name: Build and run tests in debug mode with coverage
-      run: |
-        swift test \
-          -c debug \
-          -Xswiftc -warnings-as-errors \
-          --enable-code-coverage \
-          --build-path .build-test-debug
+      - uses: fwal/setup-swift@2040b795e5c453c3a05fcb8316496afc8a74f192
+        with:
+          swift-version: ${{ matrix.swift }}
+      - uses: actions/checkout@v3
+      - name: Build
+        run: swift build
+      - name: Run tests
+        run: swift test
